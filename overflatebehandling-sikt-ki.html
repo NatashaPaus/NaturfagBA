@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="nb"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overflatebehandling – lær i ditt tempo</title>
+<style>
+:root{color-scheme:light;--ink:#172e32;--green:#104d41;--line:#d9d9cc;--paper:#fcfaf1;--page:#f1f1e8;--soft:#e3eee5}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:1.125rem/1.6 Arial,sans-serif}header,footer{background:var(--paper);border-block:1px solid var(--line)}.bar,main{width:min(100% - 2rem,1060px);margin:auto}.bar,.row{display:flex;gap:.65rem;flex-wrap:wrap;align-items:center;justify-content:space-between}.bar{padding:.8rem 0}main{padding:2rem 0;min-height:65vh}h1,h2,h3,p{margin:0 0 .85rem}h1,h2{line-height:1.12}h1{font-size:clamp(2rem,6vw,4rem);letter-spacing:-.045em}h1 span{color:var(--green)}h2{font-size:clamp(1.55rem,3vw,2.15rem)}.hero{padding:clamp(1.4rem,5vw,3.6rem);background:var(--soft);border:1px solid #c7d7cb;border-radius:20px}.hero p{max-width:57ch}.kicker{font-size:.8em;font-weight:bold;letter-spacing:.1em}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.8rem;margin:1.25rem 0}.card,fieldset,dialog{background:var(--paper);border:1px solid var(--line);border-radius:14px}.card{padding:1rem}.lesson{max-width:750px;margin:auto}.lesson .card{padding:clamp(1rem,4vw,2rem);margin:1rem 0}.lesson h1{font-size:clamp(2rem,5vw,3rem)}button,.button{display:inline-block;font:inherit;font-weight:bold;color:var(--green);background:var(--paper);border:1px solid #aabeb2;border-radius:8px;padding:.5rem .8rem;cursor:pointer;text-decoration:none}.primary{background:var(--green);color:white;border-color:var(--green)}button:disabled{opacity:.55;cursor:default}.topic{text-align:left}.topic small{display:block;font-weight:normal}.actions{display:flex;gap:.5rem;flex-wrap:wrap;margin:.9rem 0}progress{width:100%;accent-color:var(--green);height:.85rem}label.choice{display:block;padding:.55rem .75rem;border:1px solid var(--line);border-radius:8px;margin:.45rem 0;cursor:pointer}label:has(input:checked){background:var(--soft);border-color:#83a294}input{accent-color:var(--green)}fieldset{padding:.65rem 1rem;margin:1rem 0;min-width:0}legend{font-weight:bold}.confidence label{display:inline-block;margin-right:.4rem}textarea{width:100%;font:inherit;color:inherit;background:#fffefa;border:1px solid #84968c;border-radius:8px;padding:.65rem;resize:vertical}.feedback{padding:.9rem 1rem;background:#fff0d8;border-left:4px solid #8b5e20;margin-top:1rem}.feedback.success{background:var(--soft);border-color:var(--green)}:focus-visible{outline:3px solid #996900;outline-offset:3px}.sr{position:absolute;left:-9999px}.sr:focus{left:1rem;top:.5rem;background:white;z-index:5}dialog{width:min(94vw,650px);max-height:90vh;color:inherit;padding:1.2rem}dialog::backdrop{background:#102b27aa}small,.small{font-size:.88em}#settings{padding:.65rem 0}body.large{font-size:1.35rem}body.wide p,body.wide label{line-height:1.95;letter-spacing:.025em}.saved-answer{white-space:pre-wrap;overflow-wrap:anywhere}
+</style>
+<a class="sr" href="#main">Hopp til innhold</a>
+<header><div class="bar"><button id="home" type="button">Materialer · Naturfag BA</button><button id="reading" type="button" aria-expanded="false" aria-controls="settings">Aa Lesestøtte</button></div><div id="settings" class="bar" hidden style="display:none"><label><input id="large" type="checkbox"> Større tekst</label><label><input id="wide" type="checkbox"> Mer luft i teksten</label></div></header>
+<main id="main" tabindex="-1"></main>
+<footer><div class="bar"><span>Overflatebehandling av byggematerialer</span><div class="actions"><button id="answers">Mine svar</button><button id="privacy">Om opplegget og personvern</button></div></div></footer>
+<dialog id="ki" aria-labelledby="ki-title"><h2 id="ki-title">Få hjelp i Sikt KI</h2><p>Kopier veiledningsteksten, åpne Sikt KI og lim teksten inn i chatten. Bruk skolens innlogging. Hold navn og andre personopplysninger utenfor chatten.</p><label for="prompt">Veiledningstekst til Sikt KI</label><textarea id="prompt" rows="7" readonly></textarea><div class="actions"><button class="primary" id="copy">Kopier veiledningsteksten</button><a class="button" href="https://ki.sikt.no/" target="_blank" rel="noopener noreferrer">Åpne Sikt KI ↗</a><form method="dialog"><button>Lukk</button></form></div><p id="copyStatus" role="status"></p></dialog>
+<dialog id="info" aria-labelledby="info-title"><h2 id="info-title">Om opplegget og personvern</h2><p>Svar og fremdrift lagres i denne nettleseren når lokal lagring er tilgjengelig. Under «Mine svar» kan du laste ned en kopi. Hjelpeknappen lager veiledningsteksten på denne siden. Du velger selv hva du limer inn i Sikt KI.</p><form method="dialog"><button>Lukk</button></form></dialog>
+<script>
+const topics=[["Hvorfor overflatebehandler vi?","Overflatebehandling beskytter materialer mot nedbrytning og skader. Den kan også gi ønsket utseende og gjøre overflaten lettere å rengjøre. Hvilken behandling som passer, avhenger av materialet, miljøet og bruken.","Tre påvirkes blant annet av fukt og UV-lys. Stål kan ruste. Betong kan påvirkes av vann, salter, frost og CO₂."],["Overflatebehandling av tre","Maling danner vanligvis en dekkende film. Beis lar ofte trestrukturen synes og finnes i varianter for kledning og terrasse. Olje trenger inn i treverket og gir gjerne et naturlig utseende.","Langvarig fukt øker faren for sopp og råte. Lufting og avrenning hjelper treet å tørke. UV-lys kan bryte ned lignin i treoverflaten, slik at treet blir grått."],["Overflatebehandling av metall","Korrosjon er nedbrytning av metall som reagerer med omgivelsene. Rust er korrosjon på jern og stål. Vann og oksygen bidrar til rust, og salt kan øke korrosjonen.","Maling og andre belegg skiller stålet fra omgivelsene. Ved metallisering legges et metallbelegg på overflaten. Ved forsinking, også kalt galvanisering, får stålet et beskyttende sinklag."],["Overflatebehandling av betong","Vann og salter kan trenge inn i betongen. Vann i porene kan også bidra til frostskader. CO₂ fra lufta kan føre til karbonatisering. Da synker pH, og armeringen kan bli mer utsatt for korrosjon.","Egnet impregnering kan redusere opptaket av vann og salter. Maling eller lakk kan gi et beskyttende belegg. Puss er et mørtellag som påføres herdet betong. Behandlingen velges ut fra bruken og beskyttelsen som trengs."],["Forarbeid og vedlikehold","Et rent og egnet underlag gir behandlingen bedre feste. Fjern løs maling, rust, støv eller annet smuss der det trengs. Følg produktets anvisninger om temperatur, tørking, påføring og antall strøk.","Sjekk overflaten jevnlig. Reparer skader og forny behandlingen ved behov. Godt forarbeid og vedlikehold bidrar til lengre levetid."],["HMS ved overflatebehandling","Sikkerhetsdatabladet gir opplysninger om farer, førstehjelp og vernetiltak. Se særlig punkt 2 om fareidentifikasjon, punkt 4 om førstehjelp og punkt 8 om personlig verneutstyr.","Før du bruker et nytt produkt, les etiketten og sikkerhetsdatabladet. Bruk anbefalt verneutstyr og følg instruksene for ventilasjon, håndtering og oppbevaring."],["Faresymboler","Flamme kan varsle om brannfare. Dødningehode varsler om akutt giftighet. Væske på hånd og metall varsler om etsing. Utropstegn kan blant annet varsle om irritasjon eller skadelig virkning.","Død fisk og tre varsler om fare for vannmiljøet. Les etiketten og sikkerhetsdatabladet for å finne ut hvilke farer og tiltak som gjelder for produktet."],["Tenk som en fagarbeider","Start med å se på materialet og hva det utsettes for. Begrunn valget ved å forklare hva behandlingen beskytter mot, og hvordan den virker.","På en byggeplass kan regn og salt øke risikoen for korrosjon på stål. På betong kan vann og salter trenge inn, og slitt trekledning trenger kontroll av blant annet fukt og gammel behandling."],["Overflatebehandling og bærekraft","Når materialer varer lenger, kan vi redusere behovet for å skifte dem ut og bruke mindre råstoff og energi. Velg en behandling som passer, og bruk mengden produktet krever.","Produktrester og emballasje håndteres etter produktinformasjonen og den lokale avfallsordningen. Rester som er farlig avfall, leveres til godkjent mottak."]];
+const steps=[[0,"1a","Nevn to grunner til at vi overflatebehandler byggematerialer.","Tenk på hva behandlingen gjør med levetiden, utseendet eller rengjøringen."],[0,"1b","Skriv én påvirkning du vil beskytte hvert av materialene tre, metall og betong mot.","Knytt én påvirkning eller skade til hvert materiale."],[1,"2a","Hvilke tre behandlinger av tre er omtalt i teorien? Kryss av for alle tre.","Se etter behandlinger som brukes på treoverflater.",["Maling","Galvanisering","Beis","Olje","Puss"],[0,2,3]],[1,"2b","Hvilken behandling danner en tydelig, dekkende film?","Tenk på hva som skjer med trestrukturen.",["Olje","Maling","Beis"],[1]],[1,"2b–c","Hvilken behandling trenger inn og gir ofte et naturlig utseende? Hvilken lar ofte trestrukturen synes og finnes til både terrasse og kledning? Nevn også to ting tre må beskyttes mot.","Sammenlign olje og beis. Tenk deretter på fukt og påvirkning fra omgivelsene."],[1,"2d","Hvorfor må en trekledning få mulighet til å tørke?","Forklar sammenhengen mellom langvarig fukt og vekst av råtesopp."],[2,"3a–b","Hvilke metoder kan beskytte stål mot korrosjon? Kryss av for begge.","Se etter et belegg eller et sinklag.",["Maling eller annet overflatebelegg","La vann bli stående på stålet","Forsinking","Fjerne all beskyttelse"],[0,2]],[2,"3c–d","Forklar hva galvanisering er, og hvorfor skader i maling på en ståldel bør repareres.","Nevn metallet som legges på ved galvanisering. Forklar hva vann og oksygen kan gjøre der malingen er skadet."],[3,"4a–b","Hvorfor behandles betongoverflater? Nevn også tre eksempler på behandling.","Tenk på hva som kan trenge inn i betongen, og finn tre ulike metoder i teorien."],[3,"4c","Hva kan egnet overflatebehandling av betong bidra til å redusere?","Tenk på hva som kan trenge inn gjennom overflaten.",["Opptaket av vann og salter","Trykkstyrken i alle typer betong","Behovet for riktig utførelse"],[0]],[4,"5a","Kryss av for alle fire riktige påstander.","Vurder hvilken påstand som overser behovet for kontroll etter at arbeidet er gjort.",["Underlaget bør være rent og egnet.","Følg produsentens anvisninger.","Overflatebehandling trenger aldri vedlikehold.","Løs maling, rust eller smuss kan måtte fjernes.","Riktig behandling kan forlenge levetiden."],[0,1,3,4]],[4,"5b","Hvorfor er forarbeidet viktig før du maler eller behandler en overflate?","Forklar hva som skjer med festet hvis du påfører maling over smuss eller løs maling."],[5,"6a–b","Hvor finner du informasjon om farer, verneutstyr og førstehjelp?","Se etter dokumentet som beskriver sikker bruk av akkurat dette produktet.",["Værmeldingen","Reklamen på emballasjen","Sikkerhetsdatabladet"],[2]],[5,"6a og 6c","Nevn tre ting du bør gjøre før du bruker et nytt produkt. Forklar også hvorfor riktig verneutstyr er viktig.","Tenk gjennom hva du må lese, hvordan du beskytter deg, og hvilke forhold på arbeidsstedet du må sjekke."],[6,"6d","Hva varsler symbolene flamme, dødningehode og etsende væske på hånd og metall om?","Knytt hvert symbol til én fare. Bruk gjerne ordene brannfare, akutt giftighet og etsing."],[6,"6d","Hva kan utropstegnet varsle om, og hva betyr symbolet med død fisk og tre?","Ett symbol kan gjelde helsefare. Det andre gjelder vannmiljøet."],[7,"7a","En ståldel skal stå ute i regn og salt. Foreslå en behandling og forklar hvordan den beskytter.","Velg en metode og knytt beskyttelsen til korrosjon."],[7,"7b","En betongoverflate skal beskyttes mot vann og salter. Velg én egnet behandling og begrunn valget.","Forklar hvordan den valgte behandlingen reduserer inntrenging."],[7,"7c","En trekledning er slitt. Hva vil du undersøke eller gjøre før du behandler den på nytt?","Se etter fukt, råte, smuss og løs maling. Forklar hva kontrollen betyr for arbeidet videre."],[8,"8a","Hvorfor kan riktig overflatebehandling være bra for miljøet? Forklar med en årsakskjede.","Begynn med levetid. Knytt deretter behovet for utskifting til ressursbruk."],[8,"8b","Kryss av for alle tre tiltakene som kan bidra til mer bærekraftig materialbruk.","Vurder hvilke tiltak som sparer materialer eller forlenger levetiden.",["Forlenge materialets levetid","Vedlikeholde overflater ved behov","Skifte ut materialer som fortsatt fungerer","Velge behandling som passer til materialet og bruken","Bruke mer produkt enn nødvendig"],[0,1,3]],[8,"8c","Hva vil du gjøre med produktrester og brukt emballasje? Forklar hva du må sjekke først.","Bruk både produktinformasjonen og den lokale avfallsordningen. Sjekk om restene skal leveres som farlig avfall."]];
+const key='naturfagba-overflatebehandling-v1';
+const get=id=>document.getElementById(id);
+const main=get('main');
+let state={index:0,answers:{},large:false,wide:false};
+try {const stored=localStorage.getItem(key);if(stored)state=JSON.parse(stored)} catch {}
+let current=state.index;
+const save=()=>{try{localStorage.setItem(key,JSON.stringify(state))}catch{}};
+const done=()=>Object.values(state.answers).filter(a=>a.done).length;
+const unlocked=i=>i===0||Boolean(state.answers[i-1]?.done);
+function show(markup,focus=true){if('speechSynthesis' in window)speechSynthesis.cancel();main.innerHTML=markup;if(focus)main.focus();}
+function overview(focus=true){
+ const n=done();
+ show(`<section class="hero"><p class="kicker">NATURFAG · BYGG OG ANLEGG</p><h1>Overflatebehandling.<br><span>Litt om gangen.</span></h1><p>Hvordan beskytter du tre, metall og betong på byggeplassen? Les en kort teoribit og prøv én oppgave om gangen.</p><button class="primary" id="start">${n===steps.length?'Gå til mine svar':n?'Fortsett der du slapp':'Start med overflatebehandling'} →</button><p class="small">${steps.length} læringssteg · Ingen tidtaking${n?' · '+n+' gjennomført':''}</p></section>
+ <div class="grid"><section class="card"><h3>Les eller lytt</h3><p>Se hva materialet må beskyttes mot, og hvordan behandlingen virker.</p></section><section class="card"><h3>Prøv selv</h3><p>Svar med egne ord eller velg alternativer. Vurder hvor sikker du er.</p></section><section class="card"><h3>Få støtte</h3><p>Se et hint på siden eller be Sikt KI om veiledning.</p></section></div>
+ <h2>Dette skal du jobbe med</h2><div class="grid">${topics.map(([title],i)=>{const first=steps.findIndex(step=>step[0]===i);return `<button class="topic" data-first="${first}" ${unlocked(first)?'':'disabled'}>${title}</button>`}).join('')}</div><p>Temaene åpnes etter hvert. Du kan gå tilbake til steg du har gjennomført.</p>`,focus);
+ get('start').onclick=()=>n===steps.length?answers():lesson(current);
+ main.querySelectorAll('[data-first]').forEach(button=>button.onclick=()=>lesson(Number(button.dataset.first)));
+}
+function lesson(index,task=false){
+ current=index;state.index=index;save();
+ const [t,id,question,hint,options,right]=steps[index];
+ const [title,...theory]=topics[t];
+ const a=state.answers[index]||{};
+ const confidence=['Sikker','Ganske sikker','Usikker'];
+ const buttons=options?options.map((text,i)=>`<label class="choice"><input type="${right.length===1?'radio':'checkbox'}" name="choice" value="${i}"> ${text}</label>`).join(''):'<label for="response">Skriv svaret ditt</label><textarea id="response" rows="5" required></textarea>';
+ show(`<div class="lesson"><div class="row"><button id="overview">← Oversikt</button><span>Steg ${index+1} av ${steps.length} · Tema ${t+1} av ${topics.length}</span><small>${done()} gjennomført</small></div><progress max="${steps.length}" value="${done()}" aria-label="Gjennomførte steg"></progress>
+ <section class="card">${task?`<button id="switch">← Les teorien igjen</button><p class="kicker">PRØV SELV · OPPGAVE ${id.toUpperCase()}</p><h2 id="question">${question}</h2><form id="taskform">${options?`<fieldset aria-labelledby="question">${buttons}</fieldset>`:buttons}<fieldset class="confidence"><legend>Hvor sikker er du på svaret?</legend>${confidence.map(c=>`<label class="choice"><input type="radio" required name="confidence" value="${c}"> ${c}</label>`).join('')}</fieldset><div class="actions"><button class="primary" type="submit">Sjekk svaret</button><button id="hint" type="button">Jeg trenger et hint</button><button id="sikt" type="button">Få hjelp i Sikt KI</button></div></form><div id="feedback" aria-live="polite"></div><div id="review"></div>`:`<p class="kicker">LES OG UTFORSK</p><h1>${title}</h1><div class="actions" id="audio"><button id="read">Les teorien høyt</button><button id="stop">Stopp opplesning</button></div>${theory.map(p=>`<p>${p}</p>`).join('')}<p class="small">Arbeidsark · Oppgave ${id}</p><button class="primary" id="switch">Gå til oppgaven →</button>`}</section>
+ <nav class="row" aria-label="Mellom læringssteg"><button id="prev" ${index?'':'disabled'}>← Forrige steg</button><button id="next" ${a.done?'':'disabled'}>${index===steps.length-1?'Se mine svar':'Neste steg →'}</button></nav></div>`);
+ get('overview').onclick=()=>overview();
+ get('switch').onclick=()=>lesson(index,!task);
+ get('prev').onclick=()=>lesson(index-1);
+ get('next').onclick=()=>index===steps.length-1?answers():lesson(index+1);
+ if(!task){
+  if(!('speechSynthesis' in window)){get('audio').hidden=true;get('audio').style.display='none';return}
+  get('read').onclick=()=>{speechSynthesis.cancel();const msg=new SpeechSynthesisUtterance([title,...theory].join('. '));msg.lang='nb-NO';speechSynthesis.speak(msg)};
+  get('stop').onclick=()=>speechSynthesis.cancel();
+  return;
+ }
+ const form=get('taskform');
+ if(options)form.querySelectorAll('[name=choice]').forEach(input=>input.checked=(a.value||[]).includes(Number(input.value)));
+ else get('response').value=a.value||'';
+ form.querySelectorAll('[name=confidence]').forEach(input=>input.checked=input.value===a.confidence);
+ function record(complete=false){
+  const data=new FormData(form);
+  const value=options?data.getAll('choice').map(Number):get('response').value;
+  state.answers[index]={value,confidence:data.get('confidence'),done:Boolean(a.done||complete||state.answers[index]?.done)};
+  save();return value;
+ }
+ function feedback(message,success=false){
+  get('feedback').className='feedback'+(success?' success':'');
+  get('feedback').textContent=message;
+ }
+ function finish(){
+  record(true);
+  main.querySelector('progress').value=done();
+  main.querySelector('.lesson .row small').textContent=done()+' gjennomført';
+  get('review').replaceChildren();
+  get('next').disabled=false;
+  feedback('Steget er gjennomført. Du kan gå videre.',true);
+ }
+ form.addEventListener('input',()=>{record();get('review').replaceChildren();get('feedback').className='';get('feedback').textContent='';});
+ get('hint').onclick=()=>feedback(hint);
+ get('sikt').onclick=()=>openKi(title,question);
+ form.onsubmit=event=>{
+  event.preventDefault();
+  const value=record();
+  get('review').replaceChildren();
+  if(options){
+   if(!value.length){feedback('Velg et svar først.');return}
+   if(value.length===right.length&&right.every(i=>value.includes(i)))finish();
+   else feedback('Prøv en gang til. '+hint);
+   return;
+  }
+  if(!value.trim()){feedback('Skriv et svar først.');return}
+  feedback('Sjekk svaret ditt mot teorien. '+hint);
+  const confirm=document.createElement('button');
+  confirm.className='button';confirm.style.marginTop='.75rem';confirm.textContent='Jeg har vurdert svaret mitt';
+  confirm.onclick=()=>{finish();get('next').focus()};get('review').append(confirm);
+ };
+}
+function openKi(title,question){
+ get('prompt').value=`Jeg øver på overflatebehandling i Naturfag Vg1 bygg- og anleggsteknikk. Temaet er ${title}. Oppgaven min er «${question}». Vær en veileder som gir ett kort hint og stiller ett spørsmål om gangen. Vent på svaret mitt og hjelp meg å begrunne med fagbegreper. Bruk bokmål og korte svar. Ved spørsmål om et bestemt produkt skal du vise til produktets sikkerhetsdatablad og produsentens anvisninger.`;
+ get('copyStatus').textContent='';get('ki').showModal();
+}
+get('copy').onclick=async()=>{
+ const field=get('prompt');
+ try{await navigator.clipboard.writeText(field.value);get('copyStatus').textContent='Kopiert. Åpne Sikt KI og lim inn teksten.'}
+ catch{field.focus();field.select();get('copyStatus').textContent='Teksten er markert. Bruk Ctrl+C eller Cmd+C for å kopiere.'}
+};
+function answerText(step,index){
+ const a=state.answers[index];
+ if(!a)return '';
+ return step[4]?(a.value||[]).map(i=>step[4][i]).join(', '):a.value||'';
+}
+function answers(){
+ show('<div class="lesson"><h1>Mine svar</h1><div class="row"><button id="back">← Oversikt</button><button class="primary" id="download">Last ned mine svar</button></div><div id="saved"></div></div>');
+ const saved=get('saved');const exportLines=[];
+ steps.forEach((step,index)=>{
+  const value=answerText(step,index);
+  if(!value.trim())return;
+  const article=document.createElement('article');article.className='card';
+  const heading=document.createElement('h3');heading.textContent=step[1]+'. '+step[2];
+  const p=document.createElement('p');p.className='saved-answer';p.textContent=value;
+  article.append(heading,p);saved.append(article);
+  exportLines.push(heading.textContent+'\n'+value);
+ });
+ if(!exportLines.length)saved.textContent='Svarene dine vises her etter hvert.';
+ get('back').onclick=()=>overview();
+ get('download').disabled=!exportLines.length;
+ get('download').onclick=()=>{
+  const url=URL.createObjectURL(new Blob(['\ufeffOverflatebehandling – mine svar\n\n'+exportLines.join('\n\n')],{type:'text/plain;charset=utf-8'}));
+  const link=document.createElement('a');link.href=url;link.download='mine-svar-overflatebehandling.txt';link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+ };
+}
+get('home').onclick=()=>overview();get('answers').onclick=answers;get('privacy').onclick=()=>get('info').showModal();
+get('reading').onclick=()=>{
+ const open=get('settings').hidden;
+ get('settings').hidden=!open;get('settings').style.display=open?'flex':'none';
+ get('reading').setAttribute('aria-expanded',String(open));
+};
+['large','wide'].forEach(id=>{
+ get(id).checked=state[id];
+ document.body.classList.toggle(id,state[id]);
+ get(id).onchange=()=>{state[id]=get(id).checked;document.body.classList.toggle(id,state[id]);save()};
+});
+overview(false);
+</script>
+</html>
