@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="nb">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Materialquiz – Naturfag BA</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#101d25;color:#f1f6f5;font:1rem/1.5 system-ui,sans-serif}main{max-width:62rem;margin:auto;padding:clamp(.8rem,4vw,3rem)}header{border-bottom:1px solid #49616b;padding-bottom:1rem}h1{font-size:clamp(2.5rem,8vw,4.5rem);letter-spacing:-.055em;line-height:1.05;margin:.25rem 0 .7rem}p{margin:.35rem 0}.label{color:#cbefaa;font-weight:750;letter-spacing:.08em;text-transform:uppercase;font-size:.82rem}.toolbar,.actions{display:flex;gap:.65rem;align-items:center;flex-wrap:wrap}.toolbar{justify-content:space-between;margin:1.1rem 0}button{font:inherit;color:inherit;background:#20333e;border:1px solid #55717b;border-radius:.55rem;padding:.6rem .8rem;cursor:pointer}button:hover:enabled,button:focus-visible,a:focus-visible{outline:2px solid white;outline-offset:2px}.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(.3rem,1.5vw,1rem)}section{display:grid;grid-template-rows:subgrid;grid-row:span 7;gap:inherit;min-width:0;--color:#c9ef9d;--tile:#1b3431}section:nth-child(2){--color:#aee6f6;--tile:#193644}section:nth-child(3){--color:#ffcda7;--tile:#392e28}section h2{align-content:center;text-align:center;overflow-wrap:anywhere;border-top:3px solid var(--color);font-size:clamp(.8rem,2.5vw,1.3rem);margin:0;padding:.45rem .15rem;color:var(--color)}.tile{min-height:clamp(3rem,8vw,5rem);background:var(--tile);color:var(--color);padding:.2rem;font-size:clamp(1.3rem,5vw,2.35rem);font-weight:800}.tile:disabled{background:#20333e;color:#d0dddf;font-size:clamp(.75rem,2vw,1rem);cursor:default}dialog{width:min(92vw,42rem);max-height:88dvh;border:1px solid #55717b;border-radius:1rem;background:#101d25;color:#f1f6f5;padding:clamp(1rem,4vw,2rem)}dialog::backdrop{background:#02070cde}dialog h2{line-height:1.3;font-size:clamp(1.25rem,4vw,1.8rem)}#solution{background:#20333e;border-left:4px solid #cbefaa;padding:.8rem;margin:1rem 0}.primary{background:#cbefaa;color:#182518;font-weight:750}footer{margin-top:1.3rem}a{color:#aee6f6}
+</style>
+<main>
+<header><p class="label">Naturfag · Vg1 bygg- og anleggsteknikk</p><h1>Materialquiz</h1>
+<p>Spill alene eller sammen. Velg en poengrute og si svaret høyt. Vis fasiten, og vurder svaret selv.</p>
+<p>De høyeste poengsummene krever at du forklarer eller begrunner.</p></header>
+<div class="toolbar"><strong id="status" role="status"></strong><button id="restart">Start på nytt</button></div>
+<div class="board" id="board" aria-label="Poengtavle"></div>
+<noscript>Slå på JavaScript i nettleseren for å bruke quizen.</noscript>
+<footer><a href="https://natashapaus.github.io/NaturfagBA/">Flere øvingsressurser i Naturfag BA</a></footer>
+</main>
+<dialog id="card" aria-labelledby="question">
+<p class="label" id="category"></p><h2 id="question"></h2>
+<div id="solution" hidden><strong>Forslag til svar</strong><p id="answer" tabindex="-1"></p></div>
+<div class="actions"><button id="show" class="primary" autofocus>Vis fasit</button><button id="correct" class="primary" hidden>Riktig – få poeng</button><button id="practice" hidden>Øv mer – 0 poeng</button><button id="back">Tilbake til tavla</button></div>
+</dialog>
+<dialog id="reset" aria-labelledby="resetTitle">
+<h2 id="resetTitle">Starte på nytt?</h2><p>Alle rutene åpnes igjen, og poengsummen settes til null.</p>
+<form method="dialog" class="actions"><button value="cancel" autofocus>Avbryt</button><button class="primary" value="reset">Start på nytt</button></form>
+</dialog>
+<script>
+const topics = {
+  Plast: [
+    ['Hva kaller vi de lange molekylkjedene som plast består av?', 'Polymerer. De består av mange små byggesteiner som er koblet sammen.'],
+    ['Hva er forskjellen på termoplast og ferdig herdet herdeplast når de varmes opp?', 'Termoplast mykner og kan vanligvis formes på nytt. Ferdig herdet herdeplast har en fast nettverksstruktur og kan normalt ikke smeltes om.'],
+    ['Hvorfor kan plast passe godt i et avløpsrør? Knytt to egenskaper til bruken.', 'Mange plasttyper tåler fukt godt. En glatt innside gir lite motstand mot vannstrømmen. Lav vekt gjør også rørene enklere å håndtere.'],
+    ['Plastfolie og plastkapp blir liggende ute. Hvordan kan det bidra til mikroplast, og hva kan dere gjøre?', 'Sollys, vær og slitasje kan dele plasten i mindre biter. Mikroplast er plastpartikler under 5 mm. Samle opp folie og kapp før det spres, og sorter etter ordningen på byggeplassen.'],
+    ['Et plastrør skal stå ute i sol og kulde. Hva bør du undersøke før du velger rør? Begrunn to forhold.', 'Sjekk om røret tåler UV-lys, som kan svekke enkelte plasttyper. Sjekk også temperaturområdet. Noen typer blir sprø i kulde eller utvider seg ved varme. Se etter dokumentasjon for den aktuelle bruken.'],
+    ['Et lag har hele plastrør til overs og en haug med blandet avkapp. Foreslå en løsning for begge, og forklar miljøgevinsten.', 'Ta vare på hele rør til forsvarlig ombruk hvis de er uskadde og egnet for neste oppgave. Det kan spare nye råvarer. Sorter avkapp etter mottaksordningen. Rent, sortert avfall kan være lettere å materialgjenvinne, og oppsamling hindrer spredning.']
+  ],
+  Glass: [
+    ['Hva betyr det at glass har amorf struktur?', 'Atomene mangler et regelmessig krystallmønster som gjentas over lange avstander.'],
+    ['Glass er både hardt og sprøtt. Hva betyr de to ordene?', 'Hardhet er motstand mot riper og inntrykking. Sprøhet betyr at glasset kan briste med liten deformasjon.'],
+    ['Hva skjer vanligvis når herdet glass knuser? Hvilken rolle har folien i laminert glass ved brudd?', 'Herdet glass deler seg vanligvis i mange små biter. I laminert glass holder folien mange av bitene sammen.'],
+    ['En isolerrute dugger mellom glasslagene. Hva tyder det på, og hva kan ofte byttes hvis karm og ramme er i god stand?', 'Det tyder på at kantforseglingen har sviktet og sluppet inn fukt. Ofte kan selve isolerruten byttes mens karm og ramme beholdes.'],
+    ['To like store vinduer har Uw på 0,9 og 1,4 W/(m² K). Hvilket taper minst varme ved samme temperaturforskjell? Hvorfor bør du sammenligne Uw med Uw?', 'Vinduet med Uw = 0,9 taper minst varme. Uw gjelder hele vinduet, med karm og ramme. Ug gjelder glassdelen alene, så tallene beskriver ulike deler av vinduet.'],
+    ['Du skal vurdere glass til et rekkverk med fallhøyde. Hvorfor er det viktig å tenke på hva som skjer etter et brudd?', 'Glasset skal bidra til å hindre gjennomfall. Egnet laminert glass kan holde bitene sammen etter brudd. Hele løsningen, inkludert glass og innfesting, må være dokumentert for bruken.']
+  ],
+  Overflatebehandling: [
+    ['Nevn to grunner til at vi overflatebehandler byggematerialer.', 'Vi kan beskytte mot nedbrytning, gi overflaten ønsket utseende eller gjøre den lettere å rengjøre. To av disse holder.'],
+    ['En kunde vil at trestrukturen i kledningen skal synes. Hvilken behandling kan passe, og hvordan skiller den seg fra dekkende maling?', 'Egnet beis kan passe. Beis lar ofte trestrukturen synes. Dekkende maling danner vanligvis en film som skjuler mye av strukturen.'],
+    ['Hvilket metall beskytter stålet ved galvanisering? Hvorfor bør en ripe i malingen på vanlig stål repareres?', 'Galvanisering gir stålet et sinklag. Der malingen er skadet, kan vann og oksygen nå stålet og føre til rust.'],
+    ['Hvordan kan egnet impregnering beskytte betong som utsettes for vann og salter?', 'Den kan redusere hvor mye vann og salter som trenger inn. Mindre vann i porene kan redusere risikoen for frostskader, og mindre saltinntrenging kan redusere risikoen for korrosjon på armeringen.'],
+    ['Malingen flasser på en trekledning som ofte blir våt. Hva vil du undersøke og gjøre før ny maling, og hvorfor?', 'Undersøk hvor fukten kommer fra og om kledningen får tørke. Fjern løs maling og smuss, og kontroller at underlaget er egnet etter produktets anvisning. Godt forarbeid gir malingen bedre feste.'],
+    ['Du skal bruke et nytt belegg. Hvor finner du informasjon om farer, førstehjelp og verneutstyr? Forklar også hvordan vedlikehold kan redusere materialbruken.', 'Les etiketten og sikkerhetsdatabladet. I databladet finner du farer i punkt 2, førstehjelp i punkt 4 og vernetiltak i punkt 8. Utbedring av skader i belegget kan forlenge levetiden til materialet og utsette utskifting.']
+  ]
+};
+
+const get = id => document.getElementById(id);
+const board = get('board');
+const card = get('card');
+const reset = get('reset');
+const total = Object.values(topics).reduce((sum, cards) => sum + cards.length, 0);
+let score = 0;
+let count = 0;
+let active;
+
+function updateStatus() {
+  get('status').textContent = (count === total ? 'Ferdig! · ' : '') +
+    score + ' poeng · ' + count + ' av ' + total + ' besvart';
+}
+
+function openCard(topic, points, [question, answer], tile) {
+  active = {tile, topic, points};
+  get('category').textContent = topic + ' · ' + points + ' poeng';
+  get('question').textContent = question;
+  get('answer').textContent = answer;
+  get('solution').hidden = true;
+  get('show').hidden = false;
+  get('correct').hidden = true;
+  get('practice').hidden = true;
+  card.showModal();
+}
+
+function renderBoard() {
+  board.replaceChildren();
+  for (const [topic, cards] of Object.entries(topics)) {
+    const column = document.createElement('section');
+    const heading = document.createElement('h2');
+    heading.textContent = topic;
+    column.append(heading);
+    cards.forEach((data, index) => {
+      const tile = document.createElement('button');
+      const points = (index + 1) * 100;
+      tile.className = 'tile';
+      tile.textContent = points;
+      tile.setAttribute('aria-label', topic + ', ' + points + ' poeng');
+      tile.onclick = () => openCard(topic, points, data, tile);
+      column.append(tile);
+    });
+    board.append(column);
+  }
+  updateStatus();
+}
+
+function finish(correct) {
+  const {tile, topic, points} = active;
+  if (correct) score += points;
+  count += 1;
+  card.close();
+  tile.textContent = correct ? '✓ +' + points : 'Øv mer';
+  tile.setAttribute('aria-label', topic + ', ' + points + ' poeng, ' + tile.textContent);
+  tile.disabled = true;
+  (board.querySelector('button:not(:disabled)') || get('restart')).focus();
+  updateStatus();
+}
+
+get('show').onclick = () => {
+  get('show').hidden = true;
+  get('solution').hidden = false;
+  get('correct').hidden = false;
+  get('practice').hidden = false;
+  get('answer').focus();
+};
+get('correct').onclick = () => finish(true);
+get('practice').onclick = () => finish(false);
+get('back').onclick = () => card.close();
+get('restart').onclick = () => {
+  reset.returnValue = '';
+  reset.showModal();
+};
+reset.onclose = () => {
+  if (reset.returnValue === 'reset') {
+    score = 0;
+    count = 0;
+    renderBoard();
+    board.querySelector('button').focus();
+  }
+};
+renderBoard();
+</script>
+</html>
